@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Dashboard Dự đoán Downtime Nhà máy</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <!-- Header -->
+    <div class="header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Dashboard Dự đoán Downtime Nhà máy</h1>
+          <p>Giám sát tình trạng thiết bị và dự đoán thời gian ngừng máy</p>
+        </div>
+        <div class="header-controls">
+          <select id="timeRange">
+            <option value="7">7 ngày</option>
+            <option value="30">30 ngày</option>
+            <option value="90">90 ngày</option>
+          </select>
+          <select id="areaSelect">
+            <option value="overview">Tổng quan</option>
+            <option value="assembly">Khu Lắp ráp</option>
+            <option value="packaging">Dây chuyền Đóng gói</option>
+            <option value="compression">Hệ thống Nén Khí</option>
+            <option value="lineA">Dây chuyền A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Screen -->
+    <div id="overviewScreen">
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Tổng số Thiết bị</div>
+              <div class="kpi-value" style="color: #1f2937">48</div>
+            </div>
+            <div class="kpi-icon">📊</div>
+          </div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Cảnh báo Critical</div>
+              <div class="kpi-value" style="color: #dc2626">7</div>
+            </div>
+            <div class="kpi-icon">⚠️</div>
+          </div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Downtime Dự đoán</div>
+              <div class="kpi-value" style="color: #f97316">38h</div>
+              <div style="font-size: 0.75rem; color: #6b7280">7 ngày tới</div>
+            </div>
+            <div class="kpi-icon">⏰</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 1.5rem;
+        "
+      >
+        <div class="chart-container">
+          <div class="chart-title">Phân bổ Rủi ro Toàn nhà máy</div>
+          <canvas id="riskChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Rủi ro theo Khu vực</div>
+          <div class="area-list" id="areaList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail Screen -->
+    <div id="detailScreen" class="hidden">
+      <!-- Detail KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">RUL Trung bình</div>
+              <div class="kpi-value" style="color: #2563eb" id="detailRUL">
+                45h
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  id="rulProgress"
+                  style="width: 45%"
+                ></div>
+              </div>
+            </div>
+            <div class="kpi-icon">📉</div>
+          </div>
+        </div>
+        <div class="kpi-card orange">
+          <div class="kpi-content">
+            <div>
+              <div class="kpi-label">Downtime Dự đoán</div>
+              <div class="kpi-value" style="color: #f97316" id="detailDowntime">
+                12h
+              </div>
+              <div style="font-size: 0.75rem; color: #6b7280">7 ngày tới</div>
+            </div>
+            <div class="kpi-icon">⏰</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RUL Trend -->
+      <div class="chart-container">
+        <div class="chart-title">Xu hướng RUL vs Ngưỡng Bảo trì</div>
+        <canvas id="rulTrendChart"></canvas>
+      </div>
+
+      <!-- Alerts -->
+      <div class="alert-frame">
+        <div class="alert-header">🔔 Cảnh báo & Thông báo</div>
+        <div class="alert-list" id="alertList"></div>
+      </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notificationPanel">
+      <div class="notification-header">🔔 Lịch sử Thông báo</div>
+      <div id="notificationList"></div>
+    </div>
+  </body>
+</html>
